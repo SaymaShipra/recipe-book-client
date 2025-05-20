@@ -1,12 +1,14 @@
 import React from "react";
+import Swal from "sweetalert2";
 
 const AddRecipe = () => {
   const handleAddRecipe = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-
+    const categories = formData.getAll("categories");
     const newRecipe = Object.fromEntries(formData.entries());
+    newRecipe.categories = categories;
     console.log(newRecipe);
     // send recipe data to the db
     fetch("http://localhost:3200/recipes", {
@@ -18,7 +20,15 @@ const AddRecipe = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("after adding recipe to db", data);
+        if (data.insertedId) {
+          console.log("added successfully");
+          Swal.fire({
+            title: "Recipe added successfully!",
+            icon: "success",
+            draggable: true,
+          });
+          form.reset();
+        }
       });
   };
   return (
@@ -60,6 +70,7 @@ const AddRecipe = () => {
               <option disabled={true}>Select cuisine type</option>
               <option>Italian</option>
               <option>Mexican</option>
+              <option>Bangladeshi</option>
               <option>Indian</option>
               <option>Chinese</option>
               <option>Others</option>
@@ -85,6 +96,7 @@ const AddRecipe = () => {
               name="ingredients"
               className="textarea textarea-lg w-full h-28 text-base"
             ></textarea>
+
             <p className="text-gray-500 text-base">
               Put each ingredient on a new line
             </p>
@@ -104,10 +116,10 @@ const AddRecipe = () => {
               Instructions must be at least 10 characters
             </p>
           </fieldset>
-          <div>
+          {/* <div>
             <label className="label mb-5 text-black text-lg">Categories</label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {/* {categories.map((category) => ( */}
+            
               <label className="flex items-center gap-2 ">
                 <input
                   type="checkbox"
@@ -115,7 +127,37 @@ const AddRecipe = () => {
                 />
                 <span>category</span>
               </label>
-              {/* ))} */}
+             
+            </div>
+          </div>
+        </div> */}
+
+          {/* Categories */}
+          <div>
+            <label className="label text-black text-lg mb-2">Categories</label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {[
+                "Breakfast",
+                "Lunch",
+                "Dessert",
+                "Dinner",
+                "salad",
+                "Spicy",
+                "Vegan",
+                "Quick",
+                "Healthy",
+                "Pasta",
+              ].map((cat) => (
+                <label key={cat} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="categories"
+                    value={cat}
+                    className="checkbox checkbox-warning"
+                  />
+                  <span>{cat}</span>
+                </label>
+              ))}
             </div>
           </div>
         </div>
