@@ -11,6 +11,9 @@ import AllRecipes from "./pages/AllRecipes.jsx";
 import MyRecipes from "./pages/MyRecipes.jsx";
 import RecipeDetails from "./pages/RecipeDetails.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import SignIn from "./SignIn/SignIn.jsx";
+import Login from "./Login.jsx";
+import AuthProvider from "./context/AuthProvider.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -41,12 +44,22 @@ const router = createBrowserRouter([
         path: "notFound",
         Component: NotFound,
       },
+      {
+        path: "signin",
+        Component: SignIn,
+      },
+      {
+        path: "login",
+        Component: Login,
+      },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );
