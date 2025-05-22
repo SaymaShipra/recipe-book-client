@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Heart } from "lucide-react";
+import { Heart, Link } from "lucide-react";
+import { NavLink } from "react-router";
 
 const MyRecipes = () => {
   const { currentUser } = useContext(AuthContext);
@@ -160,7 +161,11 @@ const MyRecipes = () => {
               </div>
 
               <div className="flex justify-between items-center">
-                <button className="btn">Update</button>
+                <NavLink to={`/updateRecipe/${recipe._id}`}>
+                  {" "}
+                  <button className="btn">Update</button>
+                </NavLink>
+
                 <button
                   onClick={() => handleDelete(recipe._id)}
                   className="btn btn-error mt-4"

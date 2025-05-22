@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound.jsx";
 import SignIn from "./SignIn/SignIn.jsx";
 import Login from "./Login.jsx";
 import AuthProvider from "./context/AuthProvider.jsx";
+import UpdateRecipe from "./components/UpdateRecipe.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -51,6 +52,12 @@ const router = createBrowserRouter([
       {
         path: "login",
         Component: Login,
+      },
+      {
+        path: "updateRecipe/:id",
+        loader: ({ params }) =>
+          fetch(`http://localhost:3200/recipes/${params.id}`),
+        Component: UpdateRecipe,
       },
     ],
   },
