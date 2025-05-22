@@ -1,52 +1,3 @@
-// import React from "react";
-// import { useLoaderData } from "react-router";
-// import RecipesCard from "../components/RecipesCard";
-
-// const AllRecipes = () => {
-//   const recipes = useLoaderData();
-//   console.log(recipes);
-//   return (
-//     <div className="pt-20">
-//       <div className="space-y-4">
-//         <h1 className="text-4xl font-bold">All Recipes</h1>
-//         <p className="text-gray-500 text-xl">
-//           Explore our collection of delicious recipes
-//         </p>
-//       </div>
-//       <div className="mt-8 mb-8 flex justify-between">
-//         <div className="w-xs">
-//           {" "}
-//           <input
-//             type="search"
-//             className="grow input text-lg "
-//             placeholder="Search Recipes..."
-//           />
-//         </div>
-//         <select
-//           defaultValue="Select cuisine type"
-//           className="select"
-//           name="type"
-//         >
-//           <option disabled={true}>All Cuisines</option>
-//           <option>Italian</option>
-//           <option>Mexican</option>
-//           <option>Bangladeshi</option>
-//           <option>Indian</option>
-//           <option>Chinese</option>
-//           <option>Others</option>
-//         </select>
-//       </div>
-//       <div className="grid grid-cols-1 md:grid-cols-3  gap-6">
-//         {recipes.map((recipe) => (
-//           <RecipesCard key={recipe._id} recipe={recipe}></RecipesCard>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AllRecipes;
-
 import React, { useState } from "react";
 import { useLoaderData } from "react-router";
 import RecipesCard from "../components/RecipesCard";
@@ -72,7 +23,7 @@ const AllRecipes = () => {
   });
 
   return (
-    <div className="pt-20 px-4">
+    <div className="pt-20 px-4 w-11/12 mx-auto">
       <div className="space-y-4 text-center md:text-left">
         <h1 className="text-4xl font-bold">All Recipes</h1>
         <p className="text-gray-500 text-xl">

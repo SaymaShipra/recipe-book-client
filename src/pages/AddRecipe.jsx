@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
 import Swal from "sweetalert2";
+import { AuthContext } from "../context/AuthContext";
 
 const AddRecipe = () => {
+  const { currentUser } = useContext(AuthContext);
+
   const handleAddRecipe = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
     const categories = formData.getAll("categories");
     const newRecipe = Object.fromEntries(formData.entries());
+
     newRecipe.categories = categories;
-    console.log(newRecipe);
-    // send recipe data to the db
+    newRecipe.likes = 0;
+
+    // Add logged-in user's email to the recipe object
+    newRecipe.userEmail = currentUser?.email || "anonymous@example.com";
+
     fetch("http://localhost:3200/recipes", {
       method: "POST",
       headers: {
@@ -21,7 +28,6 @@ const AddRecipe = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.insertedId) {
-          console.log("added successfully");
           Swal.fire({
             title: "Recipe added successfully!",
             icon: "success",
@@ -31,8 +37,9 @@ const AddRecipe = () => {
         }
       });
   };
+
   return (
-    <div className="p-4">
+    <div className="p-4 w-11/12 mx-auto">
       <div className=" space-y-2 pt-10">
         <h1 className="text-4xl font-bold ">Add Recipe</h1>
         <p className="text-gray-600">
@@ -116,23 +123,7 @@ const AddRecipe = () => {
               Instructions must be at least 10 characters
             </p>
           </fieldset>
-          {/* <div>
-            <label className="label mb-5 text-black text-lg">Categories</label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            
-              <label className="flex items-center gap-2 ">
-                <input
-                  type="checkbox"
-                  className="checkbox checkbox-warning text-white tex-base"
-                />
-                <span>category</span>
-              </label>
-             
-            </div>
-          </div>
-        </div> */}
 
-          {/* Categories */}
           <div>
             <label className="label text-black text-lg mb-2">Categories</label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">

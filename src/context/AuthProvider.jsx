@@ -6,16 +6,14 @@ import {
   signOut,
   updateProfile,
   signInWithPopup,
+  GoogleAuthProvider,
 } from "firebase/auth";
-
 import Swal from "sweetalert2";
 import { AuthContext } from "./AuthContext";
 import { auth } from "../firebase/firebase.init";
-import { GoogleAuthProvider } from "firebase/auth/web-extension";
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -36,14 +34,10 @@ const AuthProvider = ({ children }) => {
 
       await user.reload();
       setCurrentUser({ ...auth.currentUser });
-      setError(null);
+      Swal.fire("Success", "User Registered Successfully", "success");
     } catch (err) {
       setError(err.message);
-      Swal.fire({
-        icon: "error",
-        title: "Registration Failed",
-        text: err.message,
-      });
+      Swal.fire("Error", err.message, "error");
     } finally {
       setLoading(false);
     }
@@ -57,97 +51,36 @@ const AuthProvider = ({ children }) => {
         email,
         password
       );
-      const user = userCredential.user;
-
-      Swal.fire({
-        icon: "success",
-        title: "Login Successful",
-        text: `Welcome back, ${user.displayName || "User"}!`,
-        timer: 2000,
-        showConfirmButton: false,
-      });
-
-      return user;
+      setCurrentUser(userCredential.user);
+      Swal.fire("Success", "Logged In Successfully", "success");
     } catch (err) {
       setError(err.message);
-      Swal.fire({
-        icon: "error",
-        title: "Login Failed",
-        text: err.message,
-      });
-      throw new Error(err.message);
+      Swal.fire("Error", err.message, "error");
     } finally {
       setLoading(false);
     }
   };
 
   const signInWithGoogle = async () => {
-    setLoading(true);
+    const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, GoogleAuthProvider);
-      const user = result.user;
-
-      await user.reload();
-
-      setCurrentUser({ ...auth.currentUser });
-      Swal.fire({
-        icon: "success",
-        title: "Signed in with Google",
-        text: `Welcome, ${user.displayName || "User"}!`,
-        timer: 2000,
-        showConfirmButton: false,
-      });
+      const result = await signInWithPopup(auth, provider);
+      setCurrentUser(result.user);
+      Swal.fire("Success", "Logged In with Google", "success");
     } catch (err) {
       setError(err.message);
-      Swal.fire({
-        icon: "error",
-        title: "Google Sign-in Failed",
-        text: err.message,
-      });
-    } finally {
-      setLoading(false);
+      Swal.fire("Error", err.message, "error");
     }
   };
 
   const logout = async () => {
-    try {
-      await signOut(auth);
-      setCurrentUser(null);
-      setUserData(null);
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-  };
-
-  const updateUserProfile = async (name, photoURL) => {
-    if (!auth.currentUser) return;
-    setLoading(true);
-    try {
-      await updateProfile(auth.currentUser, {
-        displayName: name,
-        photoURL: photoURL,
-      });
-      await auth.currentUser.reload();
-      setCurrentUser({ ...auth.currentUser });
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    await signOut(auth);
+    setCurrentUser(null);
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await user.reload();
-        setCurrentUser({ ...auth.currentUser });
-        console.log(
-          "Auth state changed: user photoURL:",
-          auth.currentUser.photoURL
-        );
-      } else {
-        setCurrentUser(null);
-      }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
     });
 
     return () => unsubscribe();
@@ -156,17 +89,14 @@ const AuthProvider = ({ children }) => {
   const authContextValue = useMemo(
     () => ({
       currentUser,
-      userData,
-      setUserData,
-      error,
       loading,
+      error,
       createUser,
       signInUser,
-      logout,
-      updateUserProfile,
       signInWithGoogle,
+      logout,
     }),
-    [currentUser, userData, error, loading]
+    [currentUser, loading, error]
   );
 
   return (
