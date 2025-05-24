@@ -110,18 +110,21 @@ const SignIn = () => {
           <p className="text-red-500 text-sm mb-3">{registerError}</p>
         )}
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-          disabled={loading}
-        >
-          {loading ? "Registering..." : "Register"}
-        </button>
+        <Link to="/login">
+          {" "}
+          <button
+            type="submit"
+            className="w-full bg-amber-500 text-white py-2 rounded hover:bg-amber-500"
+            disabled={loading}
+          >
+            {loading ? "Registering..." : "Register"}
+          </button>
+        </Link>
       </form>
 
       <p className="text-center text-sm my-4">
         Already have an account?{" "}
-        <Link to="/login" className="text-blue-600 hover:underline">
+        <Link to="/login" className="text-amber-500 hover:underline">
           Login
         </Link>
       </p>
