@@ -35,7 +35,8 @@ const router = createBrowserRouter([
       },
       {
         path: "allRecipes",
-        loader: () => fetch("http://localhost:3200/recipes"),
+        loader: () =>
+          fetch("https://recipe-book-server-eight.vercel.app/recipes"),
         Component: AllRecipes,
       },
       {
@@ -65,7 +66,9 @@ const router = createBrowserRouter([
       {
         path: "updateRecipe/:id",
         loader: ({ params }) =>
-          fetch(`http://localhost:3200/recipes/${params.id}`),
+          fetch(
+            `https://recipe-book-server-eight.vercel.app/recipes/${params.id}`
+          ),
         Component: ({ params }) => (
           <PrivateRoute>
             <UpdateRecipe params={params} />

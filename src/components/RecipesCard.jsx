@@ -19,11 +19,14 @@ const RecipesCard = ({ recipe }) => {
     const increment = !liked;
 
     try {
-      const res = await fetch(`http://localhost:3200/recipes/${_id}/likes`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ increment }),
-      });
+      const res = await fetch(
+        `https://recipe-book-server-eight.vercel.app/recipes/${_id}/likes`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ increment }),
+        }
+      );
       const data = await res.json();
       setLikeCount(data.likes);
       setLiked(increment);

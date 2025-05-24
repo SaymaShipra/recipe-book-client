@@ -6,7 +6,7 @@ const TopRecipes = () => {
   const [topRecipes, setTopRecipes] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3200/recipes")
+    fetch("https://recipe-book-server-eight.vercel.app/recipes")
       .then((res) => res.json())
       .then((data) => {
         const cleanedData = data.map((recipe) => {

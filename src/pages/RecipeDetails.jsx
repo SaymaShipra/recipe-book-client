@@ -10,7 +10,7 @@ const RecipeDetails = () => {
 
   // Fetch recipe data and like count from backend
   useEffect(() => {
-    fetch(`http://localhost:3200/recipes/${id}`)
+    fetch(`https://recipe-book-server-eight.vercel.app/recipes/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setRecipe(data);
@@ -30,11 +30,14 @@ const RecipeDetails = () => {
     const newLiked = !liked;
 
     try {
-      const res = await fetch(`http://localhost:3200/recipes/${id}/likes`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ increment: newLiked }),
-      });
+      const res = await fetch(
+        `https://recipe-book-server-eight.vercel.app/recipes/${id}/likes`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ increment: newLiked }),
+        }
+      );
       const data = await res.json();
       setLikeCount(data.likes);
       setLiked(newLiked);

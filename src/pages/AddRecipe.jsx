@@ -18,7 +18,7 @@ const AddRecipe = () => {
     // Add logged-in user's email to the recipe object
     newRecipe.userEmail = currentUser?.email || "anonymous@example.com";
 
-    fetch("http://localhost:3200/recipes", {
+    fetch("https://recipe-book-server-eight.vercel.app/recipes", {
       method: "POST",
       headers: {
         "content-type": "application/json",

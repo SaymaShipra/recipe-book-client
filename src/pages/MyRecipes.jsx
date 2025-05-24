@@ -14,7 +14,9 @@ const MyRecipes = () => {
 
   useEffect(() => {
     if (currentUser?.email) {
-      fetch(`http://localhost:3200/myRecipes/${currentUser.email}`)
+      fetch(
+        `https://recipe-book-server-eight.vercel.app/myRecipes/${currentUser.email}`
+      )
         .then((res) => res.json())
         .then((data) => {
           setRecipes(data);
@@ -48,7 +50,7 @@ const MyRecipes = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:3200/recipes/${recipeId}/likes`,
+        `https://recipe-book-server-eight.vercel.app/recipes/${recipeId}/likes`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -93,7 +95,7 @@ const MyRecipes = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3200/recipes/${_id}`, {
+        fetch(`https://recipe-book-server-eight.vercel.app/recipes/${_id}`, {
           method: "DELETE",
         })
           .then((res) => res.json())

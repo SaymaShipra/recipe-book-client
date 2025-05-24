@@ -21,7 +21,7 @@ const UpdateRecipe = () => {
     const updatedRecipe = Object.fromEntries(formData.entries());
     console.log(updatedRecipe);
     // send updated recipe
-    fetch(`http://localhost:3200/recipes/${_id}`, {
+    fetch(`https://recipe-book-server-eight.vercel.app/recipes/${_id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
