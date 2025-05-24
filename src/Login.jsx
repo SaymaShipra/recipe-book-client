@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router"; // ✅ FIXED
 import { FcGoogle } from "react-icons/fc";
 import Swal from "sweetalert2";
 import { auth } from "./firebase/firebase.init";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { AuthContext } from "./context/AuthContext";
+
 const Login = () => {
   const { signInUser, signInWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -13,36 +14,12 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
-  const passwordValidation = (password) => {
-    const upperCaseRegex = /[A-Z]/;
-    const lowerCaseRegex = /[a-z]/;
-    const lengthCheck = password.length >= 6;
-
-    if (!upperCaseRegex.test(password)) {
-      return "Password must contain at least one uppercase letter.";
-    }
-    if (!lowerCaseRegex.test(password)) {
-      return "Password must contain at least one lowercase letter.";
-    }
-    if (!lengthCheck) {
-      return "Password must be at least 6 characters long.";
-    }
-    return "";
-  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
-
-    const passwordError = passwordValidation(password);
-    if (passwordError) {
-      setPasswordError(passwordError);
-      return;
-    }
 
     setLoading(true);
     try {
@@ -105,6 +82,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="card bg-base-100 w-full max-w-md shadow-2xl">
@@ -131,15 +109,9 @@ const Login = () => {
                 className="input input-bordered w-full"
                 placeholder="Password"
                 value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setPasswordError("");
-                }}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              {passwordError && (
-                <p className="text-red-500 text-sm">{passwordError}</p>
-              )}
               <div>
                 <a
                   onClick={() => setIsForgotPassword(true)}

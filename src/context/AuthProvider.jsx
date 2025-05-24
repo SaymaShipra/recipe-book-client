@@ -26,18 +26,17 @@ const AuthProvider = ({ children }) => {
         password
       );
       const user = userCredential.user;
-
       await updateProfile(user, {
         displayName: name,
         photoURL: photoURL || "",
       });
-
       await user.reload();
       setCurrentUser({ ...auth.currentUser });
       Swal.fire("Success", "User Registered Successfully", "success");
     } catch (err) {
       setError(err.message);
       Swal.fire("Error", err.message, "error");
+      throw err; // ✅ important
     } finally {
       setLoading(false);
     }
@@ -56,6 +55,7 @@ const AuthProvider = ({ children }) => {
     } catch (err) {
       setError(err.message);
       Swal.fire("Error", err.message, "error");
+      throw err; // ✅ important for catching in Login.js
     } finally {
       setLoading(false);
     }
@@ -82,7 +82,6 @@ const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
     });
-
     return () => unsubscribe();
   }, []);
 

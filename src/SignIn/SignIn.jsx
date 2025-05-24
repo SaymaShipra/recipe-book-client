@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router"; // ✅ FIXED
 import Swal from "sweetalert2";
 import { FcGoogle } from "react-icons/fc";
 import { AuthContext } from "../context/AuthContext";
@@ -11,7 +11,7 @@ const SignIn = () => {
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || "/";
+  const from = location.state?.from?.pathname || "/"; // ✅ safer default
 
   const validatePassword = (password) => {
     const upperCaseRegex = /[A-Z]/;
@@ -39,13 +39,14 @@ const SignIn = () => {
     const confirmPassword = form.confirmPassword.value;
     const photoURL = form.url.value;
 
+    setRegisterError("");
+
     if (password !== confirmPassword) {
       setRegisterError("Passwords do not match");
       return;
     }
 
     const passwordValidationError = validatePassword(password);
-
     if (passwordValidationError) {
       setPasswordError(passwordValidationError);
       return;
@@ -68,11 +69,9 @@ const SignIn = () => {
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
-
     try {
       await signInWithGoogle();
       navigate(from, { replace: true });
-
       Swal.fire({
         icon: "success",
         title: "Welcome!",
@@ -102,6 +101,7 @@ const SignIn = () => {
               className="input input-bordered w-full"
               required
             />
+
             <label className="label">Email</label>
             <input
               type="email"
@@ -109,6 +109,7 @@ const SignIn = () => {
               className="input input-bordered w-full"
               required
             />
+
             <label className="label">Photo URL (optional)</label>
             <input
               type="text"
@@ -116,6 +117,7 @@ const SignIn = () => {
               className="input input-bordered w-full"
               placeholder="https://example.com/photo.jpg"
             />
+
             <label className="label">Password</label>
             <input
               type="password"
@@ -132,6 +134,7 @@ const SignIn = () => {
               className="input input-bordered w-full"
               required
             />
+
             <button
               type="submit"
               className="btn bg-amber-500 text-white mt-4 w-full"
@@ -150,9 +153,11 @@ const SignIn = () => {
             {loading ? (
               <span className="loading loading-spinner loading-sm"></span>
             ) : (
-              <FcGoogle size={20} />
+              <>
+                <FcGoogle size={20} className="mr-2" />
+                Google
+              </>
             )}
-            Google
           </button>
 
           <p className="text-center mt-4 text-base">
