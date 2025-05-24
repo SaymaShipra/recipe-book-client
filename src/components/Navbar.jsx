@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../context/AuthContext";
 import ThemeToggle from "./ThemeToggle";
-
+import { PiNotebookFill } from "react-icons/pi";
 const Navbar = () => {
   const { currentUser, logout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -83,7 +83,8 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <h1 className=" text-2xl lg:text-3xl font-medium text-amber-500 flex gap-2">
+        <h1 className=" text-2xl lg:text-3xl font-medium text-amber-500 flex gap-2 items-center">
+          <PiNotebookFill />
           <span className="font-extrabold ">Recipe </span>Book
         </h1>
       </div>
