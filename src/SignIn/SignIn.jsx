@@ -75,7 +75,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border shadow-md rounded-xl bg-white">
+    <div className="max-w-md mx-auto mt-10 p-6 border shadow-md rounded-xl bg-white mb-10">
       <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
       <form onSubmit={handleRegister}>
         <input
