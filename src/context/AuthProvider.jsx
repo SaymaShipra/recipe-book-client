@@ -7,6 +7,7 @@ import {
   updateProfile,
   signInWithPopup,
   GoogleAuthProvider,
+  sendPasswordResetEmail, // added here
 } from "firebase/auth";
 import Swal from "sweetalert2";
 import { AuthContext } from "./AuthContext";
@@ -36,7 +37,7 @@ const AuthProvider = ({ children }) => {
     } catch (err) {
       setError(err.message);
       Swal.fire("Error", err.message, "error");
-      throw err; // ✅ important
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -55,7 +56,7 @@ const AuthProvider = ({ children }) => {
     } catch (err) {
       setError(err.message);
       Swal.fire("Error", err.message, "error");
-      throw err; // ✅ important for catching in Login.js
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -78,6 +79,21 @@ const AuthProvider = ({ children }) => {
     setCurrentUser(null);
   };
 
+  // NEW forgot password function
+  const resetPassword = async (email) => {
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      Swal.fire("Success", "Password reset email sent!", "success");
+    } catch (err) {
+      setError(err.message);
+      Swal.fire("Error", err.message, "error");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
@@ -94,6 +110,7 @@ const AuthProvider = ({ children }) => {
       signInUser,
       signInWithGoogle,
       logout,
+      resetPassword, // included here
     }),
     [currentUser, loading, error]
   );
