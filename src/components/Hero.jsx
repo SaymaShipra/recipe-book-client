@@ -33,7 +33,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative h-[500px]  overflow-hidden ">
+    <div className="relative md:h-[500px] lg:h-[700px]  overflow-hidden ">
       {/* Background Layers */}
       {slides.map((slide, index) => (
         <div

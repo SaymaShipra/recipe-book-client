@@ -22,7 +22,7 @@ const Footer = () => {
                 Recipe Book
               </span>
             </Link>
-            <p className="mt-4 text-base  text-gray-700 max-w-xs">
+            <p className="mt-4 text-base  text-gray-500 max-w-xs">
               Your personal collection of delicious recipes. Discover, save, and
               share your favorite dishes.
             </p>
@@ -35,7 +35,7 @@ const Footer = () => {
                 <NavLink
                   to="/"
                   className={({ isActive }) =>
-                    isActive ? "text-amber-500" : "text-gray-700"
+                    isActive ? "text-amber-500" : "text-gray-500"
                   }
                 >
                   Home
@@ -45,7 +45,7 @@ const Footer = () => {
                 <NavLink
                   to="/allRecipes"
                   className={({ isActive }) =>
-                    isActive ? "text-amber-500" : "text-gray-700"
+                    isActive ? "text-amber-500" : "text-gray-500"
                   }
                 >
                   All Recipes
@@ -55,7 +55,7 @@ const Footer = () => {
                 <NavLink
                   to="/addRecipe"
                   className={({ isActive }) =>
-                    isActive ? "text-amber-500" : "text-gray-700"
+                    isActive ? "text-amber-500" : "text-gray-500"
                   }
                 >
                   Add Recipe
@@ -65,7 +65,7 @@ const Footer = () => {
                 <NavLink
                   to="/myRecipes"
                   className={({ isActive }) =>
-                    isActive ? "text-amber-500" : "text-gray-700"
+                    isActive ? "text-amber-500" : "text-gray-500"
                   }
                 >
                   My Recipes
@@ -80,7 +80,7 @@ const Footer = () => {
               <li>
                 <a
                   href="mailto:contact@recipebook.com"
-                  className="text-base text-gray-700 hover:text-amber-500 transition-colors"
+                  className="text-base text-gray-500 hover:text-amber-500 transition-colors"
                 >
                   contact@recipebook.com
                 </a>
@@ -88,7 +88,7 @@ const Footer = () => {
               <li className="flex space-x-4 mt-4">
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-amber-500 transition-colors"
+                  className="text-gray-500 hover:text-amber-500 transition-colors"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +106,7 @@ const Footer = () => {
                 </a>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-amber-500 transition-colors"
+                  className="text-gray-500 hover:text-amber-500 transition-colors"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +124,7 @@ const Footer = () => {
                 </a>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-amber-500 transition-colors"
+                  className="text-gray-500 hover:text-amber-500 transition-colors"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -155,7 +155,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 border-t border-gray-400 pt-6">
-          <p className="text-lg text-gray-700 text-center">
+          <p className="text-lg text-gray-500 text-center">
             &copy; {currentYear} Recipe Book. All rights reserved.
           </p>
         </div>

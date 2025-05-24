@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../context/AuthContext";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   const { currentUser, logout } = useContext(AuthContext);
@@ -15,10 +16,8 @@ const Navbar = () => {
     }
   };
 
-  // console.log("Navbar currentUser.photoURL:", currentUser?.photoURL);
-
   return (
-    <div className="navbar bg-base-100 shadow-md px-8 md:px-20 lg:px-64 border-b border-gray-200">
+    <div className="navbar bg-base-100 shadow-md px-6 md:px-16 lg:px-64 border-b border-gray-200">
       <div className="navbar-start ">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -42,21 +41,21 @@ const Navbar = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52  p-8 shadow text-lg"
           >
-            <li className="text-lg">
+            <li className="text-lg ">
               <NavLink
                 to="/"
                 className={({ isActive }) =>
-                  isActive ? "text-amber-500" : "text-gray-700"
+                  isActive ? "text-amber-500" : "text-gray-500"
                 }
               >
                 Home
               </NavLink>
             </li>
-            <li className="text-lg">
+            <li className="text-lg ">
               <NavLink
                 to="/allRecipes"
                 className={({ isActive }) =>
-                  isActive ? "text-amber-500" : "text-gray-700"
+                  isActive ? "text-amber-500" : "text-gray-500"
                 }
               >
                 All Recipes
@@ -66,7 +65,7 @@ const Navbar = () => {
               <NavLink
                 to="/addRecipe"
                 className={({ isActive }) =>
-                  isActive ? "text-amber-500" : "text-gray-700"
+                  isActive ? "text-amber-500" : "text-gray-500"
                 }
               >
                 Add Recipe
@@ -76,7 +75,7 @@ const Navbar = () => {
               <NavLink
                 to="/myRecipes"
                 className={({ isActive }) =>
-                  isActive ? "text-amber-500" : "text-gray-700"
+                  isActive ? "text-amber-500" : "text-gray-500"
                 }
               >
                 My Recipes
@@ -84,7 +83,7 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <h1 className="text-3xl font-medium text-amber-500 ">
+        <h1 className=" text-2xl lg:text-3xl font-medium text-amber-500 flex gap-2">
           <span className="font-extrabold ">Recipe </span>Book
         </h1>
       </div>
@@ -94,7 +93,7 @@ const Navbar = () => {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                isActive ? "text-amber-500" : "text-gray-700"
+                isActive ? "text-amber-500" : "text-gray-500"
               }
             >
               Home
@@ -104,7 +103,7 @@ const Navbar = () => {
             <NavLink
               to="/allRecipes"
               className={({ isActive }) =>
-                isActive ? "text-amber-500" : "text-gray-700"
+                isActive ? "text-amber-500" : "text-gray-500"
               }
             >
               All Recipes
@@ -114,7 +113,7 @@ const Navbar = () => {
             <NavLink
               to="/addRecipe"
               className={({ isActive }) =>
-                isActive ? "text-amber-500" : "text-gray-700"
+                isActive ? "text-amber-500" : "text-gray-500"
               }
             >
               Add Recipe
@@ -124,7 +123,7 @@ const Navbar = () => {
             <NavLink
               to="/myRecipes"
               className={({ isActive }) =>
-                isActive ? "text-amber-500" : "text-gray-700"
+                isActive ? "text-amber-500" : "text-gray-500"
               }
             >
               My Recipes
@@ -133,32 +132,7 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end gap-2">
-        <label className="swap swap-rotate">
-          {/* this hidden checkbox controls the state */}
-          <input
-            type="checkbox"
-            className="theme-controller"
-            value="synthwave"
-          />
-
-          {/* sun icon */}
-          <svg
-            className="swap-off h-10 w-10 fill-current"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
-          </svg>
-
-          {/* moon icon */}
-          <svg
-            className="swap-on h-10 w-10 fill-current"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
-          </svg>
-        </label>
+        <ThemeToggle> </ThemeToggle>
         {currentUser ? (
           <div className="dropdown dropdown-end">
             <label
@@ -207,7 +181,7 @@ const Navbar = () => {
             </ul>
           </div>
         ) : (
-          <div className="">
+          <div className="flex gap-4">
             <button
               onClick={() => navigate("/signin")}
               className="btn btn-outline "

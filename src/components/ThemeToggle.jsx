@@ -8,12 +8,12 @@ const ThemeToggle = () => {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    setTheme(theme === "light" ? "dark" : "light");
   };
 
   return (
-    <button onClick={toggleTheme} className="btn btn-sm">
-      {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+    <button onClick={toggleTheme} className="text-3xl cursor-pointer">
+      {theme === "light" ? "🌙 " : "☀️ "}
     </button>
   );
 };

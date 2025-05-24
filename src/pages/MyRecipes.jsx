@@ -1,12 +1,16 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Heart, Link } from "lucide-react";
+import { Heart } from "lucide-react";
 import { NavLink } from "react-router";
-
+import Swal from "sweetalert2";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { LiaEditSolid } from "react-icons/lia";
+import deleteAnimation from "../assets/animations/delete.json";
+import Lottie from "lottie-react";
 const MyRecipes = () => {
   const { currentUser } = useContext(AuthContext);
   const [recipes, setRecipes] = useState([]);
-  const [likedRecipes, setLikedRecipes] = useState({}); // track which recipes are liked
+  const [likedRecipes, setLikedRecipes] = useState({});
 
   useEffect(() => {
     if (currentUser?.email) {
@@ -14,8 +18,6 @@ const MyRecipes = () => {
         .then((res) => res.json())
         .then((data) => {
           setRecipes(data);
-
-          // Initialize liked states
           const initialLikes = {};
           data.forEach((recipe) => {
             initialLikes[recipe._id] = recipe.likedUsers?.includes(
@@ -65,7 +67,7 @@ const MyRecipes = () => {
       );
     } catch (error) {
       console.error("Like update failed:", error);
-      // Rollback UI on failure
+      // Rollback UI
       setLikedRecipes((prev) => ({ ...prev, [recipeId]: isLiked }));
       setRecipes((prev) =>
         prev.map((r) =>
@@ -80,20 +82,30 @@ const MyRecipes = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this recipe?")) return;
-
-    try {
-      const res = await fetch(`http://localhost:3200/recipes/${id}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        setRecipes((prev) => prev.filter((r) => r._id !== id));
+  const handleDelete = (_id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:3200/recipes/${_id}`, {
+          method: "DELETE",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.deletedCount) {
+              Swal.fire("Deleted!", "Your recipe has been deleted.", "success");
+              const remainingRecipes = recipes.filter((r) => r._id !== _id);
+              setRecipes(remainingRecipes);
+            }
+          });
       }
-    } catch (err) {
-      console.error(err);
-    }
+    });
   };
 
   return (
@@ -108,7 +120,7 @@ const MyRecipes = () => {
             <img
               src={recipe.image}
               alt={recipe.title}
-              className="h-48 w-full object-cover rounded-t"
+              className="w-full h-96 object-cover rounded-lg shadow-lg"
             />
             <div className="p-4">
               <div className="flex justify-between items-center">
@@ -137,7 +149,6 @@ const MyRecipes = () => {
                 <p className="text-gray-600"> {recipe.time} mins</p>
               </div>
 
-              {/* INGREDIENTS */}
               <div className="mt-3">
                 <h3 className="text-xl font-semibold mb-1">Ingredients:</h3>
                 <ul className="list-disc list-inside text-gray-700 text-lg ">
@@ -160,16 +171,29 @@ const MyRecipes = () => {
                 </p>
               </div>
 
-              <div className="flex justify-between items-center">
-                <NavLink to={`/updateRecipe/${recipe._id}`}>
-                  {" "}
-                  <button className="btn">Update</button>
+              <div className="flex justify-between items-center mt-4">
+                <NavLink to={`/updateRecipe/${recipe._id}`} className="flex">
+                  <button className="btn">
+                    {" "}
+                    <span>
+                      <LiaEditSolid size="20" />
+                    </span>
+                    Update
+                  </button>
                 </NavLink>
 
                 <button
                   onClick={() => handleDelete(recipe._id)}
-                  className="btn btn-error mt-4"
+                  className="btn btn-error text-white flex items-center -gap-4 "
                 >
+                  <span className="-ml-8 -mr-2">
+                    {" "}
+                    <Lottie
+                      animationData={deleteAnimation}
+                      loop={true}
+                      className="w-20 h-20 text-white"
+                    />
+                  </span>
                   Delete
                 </button>
               </div>

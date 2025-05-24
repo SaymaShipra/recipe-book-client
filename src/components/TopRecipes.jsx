@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router"; // fixed import
 import { Heart } from "lucide-react";
-
+import { FaArrowRightLong } from "react-icons/fa6";
 const TopRecipes = () => {
   const [topRecipes, setTopRecipes] = useState([]);
 
@@ -30,12 +30,25 @@ const TopRecipes = () => {
 
   return (
     <div className="w-11/12 mx-auto p-6">
-      <h2 className="text-3xl font-bold mb-4">Top Recipes</h2>
+      <div className="flex justify-between">
+        {" "}
+        <h2 className="text-3xl font-bold mb-4">Top Recipes</h2>
+        <Link to="/AllRecipes">
+          {" "}
+          <button className="cursor-pointer flex items-center gap-2 text-amber-500 underline text-xl">
+            <span>
+              {" "}
+              <FaArrowRightLong />{" "}
+            </span>
+            See All Recipes
+          </button>
+        </Link>
+      </div>
       <p className="text-gray-400 text-lg pb-5">
         Most loved recipes by our community
       </p>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {topRecipes.map((recipe) => {
           const { _id, title, image, type, time, likes } = recipe;
 
