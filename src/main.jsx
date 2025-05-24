@@ -124,7 +124,7 @@ const router = createBrowserRouter([
         Component: RecipeDetails,
       },
       {
-        path: "notFound",
+        path: "*",
         Component: NotFound,
       },
       {

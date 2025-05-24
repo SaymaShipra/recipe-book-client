@@ -143,15 +143,15 @@ const MyRecipes = () => {
                 </button>
               </div>
               <div className="flex gap-4">
-                <p className="badge badge-ghost text-sm py-1 px-3 font-semibold text-gray-600">
+                <p className="badge badge-ghost text-sm py-1 px-3 font-semibold text-gray-500">
                   {recipe.type}
                 </p>
-                <p className="text-gray-600"> {recipe.time} mins</p>
+                <p className="text-gray-500"> {recipe.time} mins</p>
               </div>
 
               <div className="mt-3">
                 <h3 className="text-xl font-semibold mb-1">Ingredients:</h3>
-                <ul className="list-disc list-inside text-gray-700 text-lg ">
+                <ul className="list-disc list-inside text-gray-500 text-lg ">
                   {ingredientList && ingredientList.length > 0 ? (
                     ingredientList.map((item, index) => (
                       <li key={index}>{item.trim()}</li>

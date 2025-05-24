@@ -1,34 +1,29 @@
-import { useLocation } from "react-router";
-import { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router";
 
 const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
-  }, [location.pathname]);
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 animate-fade-in">
-      <div className="text-center">
-        <h1 className="text-6xl font-bold text-brand-green mb-4">404</h1>
-        <p className="text-2xl font-semibold text-gray-800 mb-4">
-          Page Not Found
-        </p>
-        <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
-          The page you are looking for might have been removed, had its name
-          changed, or is temporarily unavailable.
-        </p>
-        <Link to="/">
-          <Button className="bg-brand-green hover:bg-brand-green/90">
-            Return to Home
-          </Button>
-        </Link>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-yellow-50 p-6 text-center">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png"
+        alt="Sad chef with empty plate"
+        className="w-48 h-48 mb-8"
+      />
+      <h1 className="text-9xl font-extrabold text-orange-400 mb-6">404</h1>
+      <p className="text-2xl font-semibold mb-4 text-gray-700">
+        Oops! This recipe is cooking somewhere else.
+      </p>
+      <p className="mb-8 text-gray-600 max-w-md">
+        We couldn't find the page you were looking for. Maybe try searching for
+        a delicious recipe instead?
+      </p>
+
+      <Link
+        to="/"
+        className="inline-block bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 px-8 rounded shadow"
+      >
+        Back to Home
+      </Link>
     </div>
   );
 };
