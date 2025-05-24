@@ -1,6 +1,11 @@
 import React from "react";
 import { ChefHat } from "lucide-react";
 import { Link } from "react-router";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const chefs = [
   {
@@ -62,35 +67,52 @@ const ChefSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Swiper Carousel */}
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={30}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          autoplay={{ delay: 4000 }}
+          breakpoints={{
+            640: {
+              slidesPerView: 1,
+            },
+            768: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 3,
+            },
+          }}
+        >
           {chefs.map((chef) => (
-            <div
-              key={chef.id}
-              className="card bg-base-100 shadow-md border hover:shadow-lg transition-shadow"
-            >
-              <figure className="h-64 overflow-hidden">
-                <img
-                  src={chef.image}
-                  alt={chef.name}
-                  className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
-                />
-              </figure>
-              <div className="card-body flex flex-col">
-                <h3 className="card-title text-xl">{chef.name}</h3>
-                <p className="text-amber-500 font-medium">{chef.specialty}</p>
-                <p className="text-base-content/70 flex-grow">{chef.bio}</p>
-                <div className="mt-4">
-                  <Link to="/AllRecipes">
-                    {" "}
-                    <button className="btn bg-amber-500 text-white w-full">
-                      View Recipes
-                    </button>
-                  </Link>
+            <SwiperSlide key={chef.id}>
+              <div className="card bg-base-100 shadow-md border hover:shadow-lg transition-shadow h-full">
+                <figure className="h-64 overflow-hidden">
+                  <img
+                    src={chef.image}
+                    alt={chef.name}
+                    className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+                  />
+                </figure>
+                <div className="card-body flex flex-col">
+                  <h3 className="card-title text-xl">{chef.name}</h3>
+                  <p className="text-amber-500 font-medium">{chef.specialty}</p>
+                  <p className="text-base-content/70 flex-grow">{chef.bio}</p>
+                  <div className="mt-4">
+                    <Link to="/AllRecipes">
+                      <button className="btn bg-amber-500 text-white w-full">
+                        View Recipes
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
       </div>
     </div>
   );
