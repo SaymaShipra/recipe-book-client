@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, NavLink } from "react-router";
-
+import { PiNotebookFill } from "react-icons/pi";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -10,16 +10,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 w-11/12 mx-auto">
           <div>
             <Link to="/" className="flex items-center">
-              {/* <img
-                src="/recipe-logo.svg"
-                alt="Recipe Book Logo"
-                className="h-8 w-8"
-                onError={(e) => {
-                  e.currentTarget.src = "https://via.placeholder.com/32";
-                }}
-              /> */}
-              <span className="ml-2 text-3xl font-semibold text-amber-500">
-                Recipe Book
+              <span className="ml-2 text-3xl font-semibold text-amber-500 flex items-center">
+                <PiNotebookFill /> Recipe Book
               </span>
             </Link>
             <p className="mt-4 text-base  text-gray-500 max-w-xs">
