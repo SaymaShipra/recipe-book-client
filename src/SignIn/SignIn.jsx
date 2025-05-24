@@ -1,85 +1,71 @@
 import React, { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
-import Swal from "sweetalert2";
-import { FcGoogle } from "react-icons/fc";
+import { Link, useNavigate, useLocation } from "react-router";
 import { AuthContext } from "../context/AuthContext";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 const SignIn = () => {
   const { createUser, signInWithGoogle } = useContext(AuthContext);
   const [registerError, setRegisterError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [passwordError, setPasswordError] = useState("");
+
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || "/";
-
-  const validatePassword = (password) => {
-    const upperCaseRegex = /[A-Z]/;
-    const lowerCaseRegex = /[a-z]/;
-    const minLength = 6;
-
-    if (!upperCaseRegex.test(password)) {
-      return "Password must contain at least one uppercase letter.";
-    }
-    if (!lowerCaseRegex.test(password)) {
-      return "Password must contain at least one lowercase letter.";
-    }
-    if (password.length < minLength) {
-      return `Password must be at least ${minLength} characters long.`;
-    }
-    return "";
-  };
+  const from = location.state?.from?.pathname || "/";
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setRegisterError("");
+    setLoading(true);
+
     const form = e.target;
     const name = form.name.value;
+    const photoURL = form.photoURL.value;
     const email = form.email.value;
     const password = form.password.value;
-    const confirmPassword = form.confirmPassword.value;
-    const photoURL = form.url.value;
 
-    if (password !== confirmPassword) {
-      setRegisterError("Passwords do not match");
+    if (password.length < 6) {
+      setRegisterError("Password must be at least 6 characters long");
+      setLoading(false);
       return;
-    }
-
-    const passwordValidationError = validatePassword(password);
-
-    if (passwordValidationError) {
-      setPasswordError(passwordValidationError);
-      return;
-    } else {
-      setPasswordError("");
     }
 
     try {
-      setLoading(true);
       await createUser(email, password, name, photoURL);
+
+      // ✅ Save user to MongoDB
+      await axios.post("https://recipe-book-server-eight.vercel.app/users", {
+        name,
+        email,
+        photoURL,
+      });
+
       Swal.fire("Success!", "Account created successfully!", "success");
       navigate("/login");
-    } catch (err) {
-      setRegisterError(err.message);
-      Swal.fire("Error", err.message, "error");
+    } catch (error) {
+      setRegisterError(error.message);
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
+    setRegisterError("");
     setLoading(true);
 
     try {
-      await signInWithGoogle();
-      navigate(from, { replace: true });
+      const result = await signInWithGoogle();
+      const user = result.user;
 
-      Swal.fire({
-        icon: "success",
-        title: "Welcome!",
-        text: "Signed in with Google successfully!",
-        timer: 1500,
-        showConfirmButton: false,
+      // ✅ Save Google user to MongoDB
+      await axios.post("https://recipe-book-server-eight.vercel.app/users", {
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
       });
+
+      Swal.fire("Success!", "Signed in with Google successfully!", "success");
+      navigate(from, { replace: true });
     } catch (error) {
       setRegisterError(error.message);
       Swal.fire("Error", error.message, "error");
@@ -89,79 +75,65 @@ const SignIn = () => {
   };
 
   return (
-    <div className="hero bg-base-200 min-h-screen">
-      <div className="card bg-base-100 w-full max-w-md shadow-2xl">
-        <div className="card-body">
-          <h1 className="text-3xl font-bold text-center">Create an account</h1>
-          {registerError && <p className="text-red-500">{registerError}</p>}
-          <form onSubmit={handleRegister}>
-            <label className="label">Full Name</label>
-            <input
-              type="text"
-              name="name"
-              className="input input-bordered w-full"
-              required
-            />
-            <label className="label">Email</label>
-            <input
-              type="email"
-              name="email"
-              className="input input-bordered w-full"
-              required
-            />
-            <label className="label">Photo URL (optional)</label>
-            <input
-              type="text"
-              name="url"
-              className="input input-bordered w-full"
-              placeholder="https://example.com/photo.jpg"
-            />
-            <label className="label">Password</label>
-            <input
-              type="password"
-              name="password"
-              className="input input-bordered w-full"
-              required
-            />
-            {passwordError && <p className="text-red-500">{passwordError}</p>}
+    <div className="max-w-md mx-auto mt-10 p-6 border shadow-md rounded-xl bg-white">
+      <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
+      <form onSubmit={handleRegister}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          name="photoURL"
+          placeholder="Photo URL"
+          className="w-full mb-4 p-2 border rounded"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          className="w-full mb-4 p-2 border rounded"
+          required
+        />
 
-            <label className="label">Confirm Password</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              className="input input-bordered w-full"
-              required
-            />
-            <button
-              type="submit"
-              className="btn bg-amber-500 text-white mt-4 w-full"
-              disabled={loading}
-            >
-              {loading ? "Registering..." : "Register"}
-            </button>
-          </form>
+        {registerError && (
+          <p className="text-red-500 text-sm mb-3">{registerError}</p>
+        )}
 
-          <div className="divider text-gray-500">OR CONTINUE WITH</div>
-          <button
-            onClick={handleGoogleSignIn}
-            className="btn btn-outline w-full border-amber-400 text-amber-500"
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="loading loading-spinner loading-sm"></span>
-            ) : (
-              <FcGoogle size={20} />
-            )}
-            Google
-          </button>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          disabled={loading}
+        >
+          {loading ? "Registering..." : "Register"}
+        </button>
+      </form>
 
-          <p className="text-center mt-4 text-base">
-            Already have an account?{" "}
-            <Link to="/login" className="text-amber-500 underline font-bold">
-              Login
-            </Link>
-          </p>
-        </div>
+      <p className="text-center text-sm my-4">
+        Already have an account?{" "}
+        <Link to="/login" className="text-blue-600 hover:underline">
+          Login
+        </Link>
+      </p>
+
+      <div className="text-center mt-4">
+        <button
+          onClick={handleGoogleSignIn}
+          className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600"
+          disabled={loading}
+        >
+          {loading ? "Signing in..." : "Sign in with Google"}
+        </button>
       </div>
     </div>
   );

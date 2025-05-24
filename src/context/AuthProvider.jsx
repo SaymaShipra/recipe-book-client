@@ -12,6 +12,7 @@ import {
 import Swal from "sweetalert2";
 import { AuthContext } from "./AuthContext";
 import { auth } from "../firebase/firebase.init";
+import axios from "axios";
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -66,7 +67,16 @@ const AuthProvider = ({ children }) => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      setCurrentUser(result.user);
+      const user = result.user;
+      setCurrentUser(user);
+
+      // 🔥 Save to MongoDB
+      await axios.post("https://recipe-book-server-eight.vercel.app/users", {
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+      });
+
       Swal.fire("Success", "Logged In with Google", "success");
     } catch (err) {
       setError(err.message);

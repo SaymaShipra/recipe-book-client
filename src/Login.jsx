@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { FcGoogle } from "react-icons/fc";
 import { AuthContext } from "./context/AuthContext";
+import axios from "axios";
 
 const Login = () => {
   const { signInUser, signInWithGoogle, resetPassword } =
@@ -10,6 +11,7 @@ const Login = () => {
   const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailForReset, setEmailForReset] = useState("");
+
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || "/";
@@ -35,7 +37,16 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+      const user = result.user;
+
+      // ✅ Save user to MongoDB
+      await axios.post("https://recipe-book-server-eight.vercel.app/users", {
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+      });
+
       Swal.fire({
         icon: "success",
         title: "Welcome!",
@@ -62,7 +73,6 @@ const Login = () => {
       setEmailForReset("");
     } catch (err) {
       console.log(err);
-      // error handled in resetPassword method
     } finally {
       setLoading(false);
     }
