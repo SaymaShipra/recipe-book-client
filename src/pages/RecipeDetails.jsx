@@ -13,6 +13,8 @@ const RecipeDetails = () => {
     fetch(`https://recipe-book-server-eight.vercel.app/recipes/${id}`)
       .then((res) => res.json())
       .then((data) => {
+        // Make sure categories is always an array
+        data.categories = Array.isArray(data.categories) ? data.categories : [];
         setRecipe(data);
         setLikeCount(data.likes || 0);
       })
@@ -61,8 +63,16 @@ const RecipeDetails = () => {
     categories = [],
   } = recipe;
 
-  const ingredientList = ingredients?.split(/\n|(?=\d+\.\s)/).filter(Boolean);
-  const instructionList = instructions?.split(/\n|(?=\d+\.\s)/).filter(Boolean);
+  // Safely split ingredients and instructions if they are strings
+  const ingredientList =
+    typeof ingredients === "string"
+      ? ingredients.split(/\n|(?=\d+\.\s)/).filter(Boolean)
+      : [];
+
+  const instructionList =
+    typeof instructions === "string"
+      ? instructions.split(/\n|(?=\d+\.\s)/).filter(Boolean)
+      : [];
 
   return (
     <div className="max-w-4xl  p-6 pt-20  mx-auto">
@@ -103,8 +113,8 @@ const RecipeDetails = () => {
 
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">Categories:</h2>
-        <div className="flex gap-2 flex-wrap ">
-          {categories.length > 0 ? (
+        <div className="flex gap-2 flex-wrap">
+          {Array.isArray(categories) && categories.length > 0 ? (
             categories.map((cat, idx) => (
               <span key={idx} className="badge badge-warning text-sm py-1 px-3">
                 {cat}
@@ -120,7 +130,7 @@ const RecipeDetails = () => {
         <div>
           <h2 className="text-2xl font-bold mb-2">Ingredients</h2>
           <ul className="list-disc list-inside text-gray-700 text-xl">
-            {ingredientList && ingredientList.length > 0 ? (
+            {ingredientList.length > 0 ? (
               ingredientList.map((item, index) => (
                 <li key={index}>{item.trim()}</li>
               ))
@@ -132,7 +142,7 @@ const RecipeDetails = () => {
         <div>
           <h2 className="text-2xl font-bold mb-2">Instructions</h2>
           <ul className="list-decimal list-inside text-gray-700 text-xl ">
-            {instructionList && instructionList.length > 0 ? (
+            {instructionList.length > 0 ? (
               instructionList.map((step, index) => (
                 <li key={index}>{step.trim()}</li>
               ))

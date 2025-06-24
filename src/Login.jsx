@@ -1,34 +1,68 @@
 import React, { useContext, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
-import Swal from "sweetalert2";
-import { FcGoogle } from "react-icons/fc";
 import { AuthContext } from "./context/AuthContext";
-import axios from "axios";
+import Swal from "sweetalert2";
+import { Link, useLocation, useNavigate } from "react-router";
+import { FcGoogle } from "react-icons/fc";
 
 const Login = () => {
   const { signInUser, signInWithGoogle, resetPassword } =
     useContext(AuthContext);
-  const [loginError, setLoginError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [emailForReset, setEmailForReset] = useState("");
-
-  const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || "/";
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
 
     try {
-      setLoading(true);
-      await signInUser(email, password);
-      Swal.fire("Success!", "Logged in successfully!", "success");
-      navigate(from, { replace: true });
-    } catch (err) {
-      setLoginError(err.message);
+      const result = await signInUser(email, password);
+      const lastSignInTime = result.user?.metadata?.lastSignInTime;
+
+      const signInInfo = {
+        email,
+        lastSignInTime,
+      };
+
+      const res = await fetch(
+        "https://recipe-book-server-eight.vercel.app/users",
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(signInInfo),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to update last sign-in time");
+
+      const data = await res.json();
+
+      if (data.modifiedCount || data.success) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Login Successful.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate(from, { replace: true });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Update failed",
+          text: "Could not update last sign-in time.",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Login failed",
+        text: error.message,
+      });
     } finally {
       setLoading(false);
     }
@@ -38,107 +72,121 @@ const Login = () => {
     setLoading(true);
     try {
       const result = await signInWithGoogle();
-      const user = result.user;
+      const lastSignInTime = result.user?.metadata?.lastSignInTime;
 
-      // ✅ Save user to MongoDB
-      await axios.post("https://recipe-book-server-eight.vercel.app/users", {
-        name: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-      });
+      const signInInfo = {
+        email: result.user?.email,
+        lastSignInTime,
+      };
+
+      const res = await fetch(
+        "https://recipe-book-server-eight.vercel.app/users",
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(signInInfo),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to update last sign-in time");
+
+      await res.json();
 
       Swal.fire({
+        position: "top-end",
         icon: "success",
-        title: "Welcome!",
-        text: "Logged in with Google successfully!",
-        timer: 1500,
+        title: "Google Sign-In Successful.",
         showConfirmButton: false,
+        timer: 1500,
       });
       navigate(from, { replace: true });
-    } catch (err) {
-      setLoginError(err.message);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Google Sign-In failed",
+        text: error.message,
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleForgotPassword = async () => {
-    if (!emailForReset) {
-      Swal.fire("Error", "Please enter your email to reset password", "error");
-      return;
-    }
-    try {
-      setLoading(true);
-      await resetPassword(emailForReset);
-      setEmailForReset("");
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
+  const handleForgotPassword = () => {
+    Swal.fire({
+      title: "Enter your email",
+      input: "email",
+      inputPlaceholder: "Your email address",
+      showCancelButton: true,
+      confirmButtonText: "Reset Password",
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        resetPassword(result.value)
+          .then(() => {
+            Swal.fire("Success!", "Password reset email sent.", "success");
+          })
+          .catch((error) => {
+            Swal.fire("Error", error.message, "error");
+          });
+      }
+    });
   };
 
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="card bg-base-100 w-full max-w-md shadow-2xl">
         <div className="card-body">
-          <h1 className="text-3xl font-bold text-center">
-            Login to your account
-          </h1>
-          {loginError && <p className="text-red-500">{loginError}</p>}
-          <form onSubmit={handleLogin}>
+          <h1 className="text-3xl font-bold text-center">Welcome back</h1>
+          <p className="text-center text-gray-500 text-lg">
+            Login to your account to continue
+          </p>
+          <form onSubmit={handleSignIn} className="fieldset">
             <label className="label">Email</label>
             <input
               type="email"
               name="email"
-              className="input input-bordered w-full"
+              className="input text-gray-500 w-full"
+              placeholder="Email"
               required
-              onChange={(e) => setEmailForReset(e.target.value)}
-              value={emailForReset}
             />
             <label className="label">Password</label>
             <input
               type="password"
               name="password"
-              className="input input-bordered w-full"
+              className="input text-gray-500 w-full"
+              placeholder="Password"
               required
             />
+            <div>
+              <a
+                onClick={handleForgotPassword}
+                className="link link-hover cursor-pointer text-gray-500"
+              >
+                Forgot password?
+              </a>
+            </div>
             <button
-              type="submit"
-              className="btn bg-amber-500 text-white mt-4 w-full"
+              className="btn text-white bg-amber-500 mt-4 w-full"
               disabled={loading}
             >
               {loading ? "Logging in..." : "Login"}
             </button>
           </form>
 
-          <button
-            onClick={handleGoogleSignIn}
-            className="btn btn-outline w-full border-amber-400 text-amber-500 mt-4"
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="loading loading-spinner loading-sm"></span>
-            ) : (
-              <>
-                <FcGoogle size={20} className="mr-2" />
-                Sign in with Google
-              </>
-            )}
-          </button>
+          <div className="divider">OR</div>
 
           <button
-            onClick={handleForgotPassword}
-            className="btn btn-link text-amber-500 mt-4 underline"
+            onClick={handleGoogleSignIn}
+            className="btn btn-outline w-full flex items-center justify-center gap-2 text-amber-500  border-amber-500"
             disabled={loading}
           >
-            Forgot Password?
+            <FcGoogle />
+            {loading ? "Please wait..." : "Sign In with Google"}
           </button>
 
           <p className="text-center mt-4 text-base">
             Don't have an account?{" "}
             <Link to="/signin" className="text-amber-500 underline font-bold">
-              SignIn
+              Register
             </Link>
           </p>
         </div>

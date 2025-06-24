@@ -7,18 +7,19 @@ import {
   updateProfile,
   signInWithPopup,
   GoogleAuthProvider,
-  sendPasswordResetEmail, // added here
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import Swal from "sweetalert2";
-import { AuthContext } from "./AuthContext";
 import { auth } from "../firebase/firebase.init";
-import axios from "axios";
+import { AuthContext } from "./AuthContext";
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Create user with email & password
   const createUser = async (email, password, name, photoURL) => {
     setLoading(true);
     try {
@@ -28,13 +29,18 @@ const AuthProvider = ({ children }) => {
         password
       );
       const user = userCredential.user;
+
       await updateProfile(user, {
         displayName: name,
         photoURL: photoURL || "",
       });
+
       await user.reload();
       setCurrentUser({ ...auth.currentUser });
-      Swal.fire("Success", "User Registered Successfully", "success");
+      setError(null);
+
+      Swal.fire("Success", "User registered successfully!", "success");
+      return user;
     } catch (err) {
       setError(err.message);
       Swal.fire("Error", err.message, "error");
@@ -44,6 +50,7 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  // Sign in with email & password
   const signInUser = async (email, password) => {
     setLoading(true);
     try {
@@ -52,61 +59,112 @@ const AuthProvider = ({ children }) => {
         email,
         password
       );
-      setCurrentUser(userCredential.user);
-      Swal.fire("Success", "Logged In Successfully", "success");
+      const user = userCredential.user;
+
+      setCurrentUser(user);
+      setError(null);
+
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: `Welcome back, ${user.displayName || "User"}!`,
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      return user;
     } catch (err) {
       setError(err.message);
-      Swal.fire("Error", err.message, "error");
+      Swal.fire("Login Failed", err.message, "error");
       throw err;
     } finally {
       setLoading(false);
     }
   };
 
+  // Sign in with Google
   const signInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
+    setLoading(true);
     try {
+      const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      setCurrentUser(user);
 
-      // 🔥 Save to MongoDB
-      await axios.post("https://recipe-book-server-eight.vercel.app/users", {
-        name: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
+      await user.reload();
+      setCurrentUser({ ...auth.currentUser });
+      setError(null);
+
+      Swal.fire({
+        icon: "success",
+        title: "Signed in with Google",
+        text: `Welcome, ${user.displayName || "User"}!`,
+        timer: 2000,
+        showConfirmButton: false,
       });
 
-      Swal.fire("Success", "Logged In with Google", "success");
+      return user;
     } catch (err) {
       setError(err.message);
-      Swal.fire("Error", err.message, "error");
+      Swal.fire("Google Sign-in Failed", err.message, "error");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Sign out
   const logout = async () => {
-    await signOut(auth);
-    setCurrentUser(null);
+    try {
+      await signOut(auth);
+      setCurrentUser(null);
+      setUserData(null);
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
-  // NEW forgot password function
+  // Update user profile
+  const updateUserProfile = async (name, photoURL) => {
+    if (!auth.currentUser) return;
+    setLoading(true);
+    try {
+      await updateProfile(auth.currentUser, {
+        displayName: name,
+        photoURL: photoURL,
+      });
+      await auth.currentUser.reload();
+      setCurrentUser({ ...auth.currentUser });
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Reset password
   const resetPassword = async (email) => {
     setLoading(true);
     try {
       await sendPasswordResetEmail(auth, email);
       Swal.fire("Success", "Password reset email sent!", "success");
+      setError(null);
     } catch (err) {
       setError(err.message);
       Swal.fire("Error", err.message, "error");
-      throw err;
     } finally {
       setLoading(false);
     }
   };
 
+  // Observe auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await user.reload();
+        setCurrentUser({ ...auth.currentUser });
+      } else {
+        setCurrentUser(null);
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -114,15 +172,18 @@ const AuthProvider = ({ children }) => {
   const authContextValue = useMemo(
     () => ({
       currentUser,
-      loading,
+      userData,
+      setUserData,
       error,
+      loading,
       createUser,
       signInUser,
-      signInWithGoogle,
       logout,
-      resetPassword, // included here
+      updateUserProfile,
+      signInWithGoogle,
+      resetPassword,
     }),
-    [currentUser, loading, error]
+    [currentUser, userData, error, loading]
   );
 
   return (
