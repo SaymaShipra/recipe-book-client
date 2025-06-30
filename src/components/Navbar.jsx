@@ -17,7 +17,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="navbar bg-base-100 shadow-md px-6 md:px-16 lg:px-64 border-b border-gray-200">
+    <div className="navbar sticky top-0 z-50 bg-base-100 shadow-md px-6 md:px-16 lg:px-64 border-b border-gray-200">
       <div className="navbar-start ">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -81,6 +81,16 @@ const Navbar = () => {
                 My Recipes
               </NavLink>
             </li>
+            <li className="text-lg">
+              <NavLink
+                to="/Contact"
+                className={({ isActive }) =>
+                  isActive ? "text-amber-500" : "text-gray-500"
+                }
+              >
+                Contact Us
+              </NavLink>
+            </li>
           </ul>
         </div>
         <h1 className=" text-2xl lg:text-3xl font-medium text-amber-500 flex gap-2 items-center">
@@ -128,6 +138,16 @@ const Navbar = () => {
               }
             >
               My Recipes
+            </NavLink>
+          </li>
+          <li className="text-lg">
+            <NavLink
+              to="/Contact"
+              className={({ isActive }) =>
+                isActive ? "text-amber-500" : "text-gray-500"
+              }
+            >
+              Contact Us
             </NavLink>
           </li>
         </ul>

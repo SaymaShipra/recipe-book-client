@@ -16,6 +16,7 @@ import Login from "./Login.jsx";
 import AuthProvider from "./context/AuthProvider.jsx";
 import UpdateRecipe from "./components/UpdateRecipe.jsx";
 import PrivateRoute from "./router/PrivateRoute.jsx";
+import Contact from "./pages/Contact.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "recipe/:id",
         Component: RecipeDetails,
+      },
+      {
+        path: "contact",
+        Component: Contact,
       },
       {
         path: "*",

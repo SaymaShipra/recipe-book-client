@@ -4,12 +4,12 @@ import { Link } from "react-router";
 import { Heart } from "lucide-react";
 
 const RecipesCard = ({ recipe }) => {
-  const { _id, title, image, time, type, likes = 0 } = recipe;
+  const { _id, title, image, time, type, instructions, likes = 0 } = recipe;
 
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
+  const [showFull, setShowFull] = useState(false);
 
-  // On mount, check if user already liked this recipe in localStorage
   useEffect(() => {
     const savedLiked = localStorage.getItem(`recipe-liked-${_id}`) === "true";
     setLiked(savedLiked);
@@ -59,7 +59,7 @@ const RecipesCard = ({ recipe }) => {
             onClick={toggleLike}
             aria-label={liked ? "Unlike" : "Like"}
             title={liked ? "Unlike" : "Like"}
-            className=" p-1 bg-white/80 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition"
+            className="p-1 bg-white/80 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition"
           >
             <Heart
               size={24}
@@ -72,6 +72,23 @@ const RecipesCard = ({ recipe }) => {
             </span>
           </button>
         </div>
+
+        <p className="text-gray-700 pt-4">
+          <span className="font-semibold">Instructions:</span>
+          <br />
+          {showFull || instructions.length <= 100
+            ? instructions
+            : `${instructions.slice(0, 100)}...`}
+          {instructions.length > 100 && (
+            <button
+              onClick={() => setShowFull(!showFull)}
+              className="ml-2 text-amber-500 underline font-medium"
+            >
+              {showFull ? "See less" : "See more"}
+            </button>
+          )}
+        </p>
+
         <p className="text-gray-500 pt-4 pb-4">Prep time: {time} mins</p>
         <div>
           <Link to={`/recipe/${_id}`}>
