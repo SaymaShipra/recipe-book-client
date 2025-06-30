@@ -17,6 +17,11 @@ import AuthProvider from "./context/AuthProvider.jsx";
 import UpdateRecipe from "./components/UpdateRecipe.jsx";
 import PrivateRoute from "./router/PrivateRoute.jsx";
 import Contact from "./pages/Contact.jsx";
+import Overview from "./pages/Overview.jsx";
+import AllItems from "./components/AllItems.jsx";
+import AddItem from "./components/AddItem.jsx";
+import MyItems from "./components/MyItems.jsx";
+import DashboardLayout from "./pages/DashboardLayout.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -59,6 +64,33 @@ const router = createBrowserRouter([
       {
         path: "*",
         Component: NotFound,
+      },
+      // ======= Dashboard Routes =======
+      {
+        path: "dashboard",
+        Component: () => (
+          <PrivateRoute>
+            <DashboardLayout />
+          </PrivateRoute>
+        ),
+        children: [
+          {
+            index: true, // default dashboard overview
+            Component: Overview,
+          },
+          {
+            path: "allItems",
+            Component: AllItems,
+          },
+          {
+            path: "addItem",
+            Component: AddItem,
+          },
+          {
+            path: "myItems",
+            Component: MyItems,
+          },
+        ],
       },
       {
         path: "signin",

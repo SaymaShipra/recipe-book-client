@@ -91,6 +91,16 @@ const Navbar = () => {
                 Contact Us
               </NavLink>
             </li>
+            <li className="text-lg">
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  isActive ? "text-amber-500" : "text-gray-500"
+                }
+              >
+                Dashboard
+              </NavLink>
+            </li>
           </ul>
         </div>
         <h1 className=" text-2xl lg:text-3xl font-medium text-amber-500 flex gap-2 items-center">
@@ -138,6 +148,16 @@ const Navbar = () => {
               }
             >
               My Recipes
+            </NavLink>
+          </li>
+          <li className="text-lg">
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                isActive ? "text-amber-500" : "text-gray-500"
+              }
+            >
+              Dashboard
             </NavLink>
           </li>
           <li className="text-lg">
