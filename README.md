@@ -39,22 +39,22 @@ https://recipe-book-app-21872.web.app/
 💾 Persistent data storage with MongoDB
 
 📦 Dependencies
-react
+*react
 
-react-dom
+*react-dom
 
-axios
+*axios
 
-firebase
+*firebase
 
-sweetalert2
+*sweetalert2
 
-tailwindcss
+*tailwindcss
 
-express
+*express
 
-mongodb
+*mongodb
 
-cors
+*cors
 
 dotenv
