@@ -1,12 +1,56 @@
-# React + Vite
+🚀 Recipe Book App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🔍 Description:
+A full-stack recipe app where users can register, add, and manage their personal recipes with details like cuisine, ingredients, and categories. Features Firebase authentication, MongoDB data storage, and a responsive React + Tailwind CSS frontend for seamless user experience.
 
-Currently, two official plugins are available:
+🌐 Live Demo:
+https://recipe-book-app-21872.web.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🛠️ Technologies Used
+⚛️ React.js
 
-## Expanding the ESLint configuration
+🟢 Node.js & Express.js
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+🍃 MongoDB
+
+🔐 Firebase Authentication
+
+🎨 Tailwind CSS
+
+🎉 SweetAlert2
+
+📡 Axios
+
+✨ Key Features
+🔑 User registration and login (Email/Password & Google)
+
+📝 Add, view, and manage personal recipes
+
+🔎 Filter recipes by categories and cuisine types
+
+📱 Responsive design for mobile and desktop
+
+🎈 Interactive alerts with SweetAlert2
+
+💾 Persistent data storage with MongoDB
+
+📦 Dependencies
+react
+
+react-dom
+
+axios
+
+firebase
+
+sweetalert2
+
+tailwindcss
+
+express
+
+mongodb
+
+cors
+
+dotenv
